@@ -1,7 +1,7 @@
 class Bookmark < ApplicationRecord
   validates :url, presence: true
   validates :title, presence: true
-  validates :states, presence: true
+  validates :status, presence: true
   validates :caption, length: { maximum: 140 }
 
   belongs_to :user
