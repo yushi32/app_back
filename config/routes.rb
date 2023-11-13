@@ -3,6 +3,11 @@ Rails.application.routes.draw do
   namespace :api, format: 'json' do
     namespace :v1 do
       resource :authentication, only: %i[create]
+      resources :bookmarks, only: %i[index create destroy] do
+        collection do
+          get 'check_duplicate'
+        end
+      end
     end
   end
 end
