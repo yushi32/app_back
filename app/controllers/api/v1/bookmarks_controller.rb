@@ -15,6 +15,15 @@ class Api::V1::BookmarksController < Api::V1::BaseController
     end
   end
 
+  def destroy
+    bookmark = current_user.bookmarks.find(params[:id])
+    if bookmark.destroy
+      head :no_content
+    else
+      render json: { error: "Failed to destroy" }, status: 422
+    end
+  end
+
   def check_duplicate
     existing_bookmark = current_user.bookmarks.find_by(url: params[:url])
 

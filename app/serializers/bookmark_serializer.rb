@@ -1,5 +1,5 @@
 class BookmarkSerializer
   include JSONAPI::Serializer
 
-  attributes :url, :title
+  attributes :id, :url, :title
 end
