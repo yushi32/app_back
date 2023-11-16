@@ -7,7 +7,7 @@ ruby "3.2.2"
 gem "rails", "~> 7.0.8"
 
 # Use postgresql as the database for Active Record
-gem "pg", "~> 1.1"
+gem "pg", "~> 1.5.4"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
@@ -51,3 +51,7 @@ group :development do
   # gem "spring"
 end
 
+# Fly.ioへのデプロイ時に自動追加
+gem "dockerfile-rails", ">= 1.5", :group => :development
+gem "sentry-ruby", "~> 5.13"
+gem "sentry-rails", "~> 5.13"
