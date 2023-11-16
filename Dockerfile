@@ -3,7 +3,9 @@ FROM ruby:3.2.2
 ENV LANG=C.UTF-8 \
   TZ=Asia/Tokyo
 
-RUN apt-get update -qq && apt-get install -y postgresql-client
+RUN apt-get update -qq && apt-get install -y postgresql-client libpq-dev
+RUN curl -L https://fly.io/install.sh | sh
+
 RUN mkdir /app
 WORKDIR /app
 
