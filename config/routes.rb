@@ -8,6 +8,7 @@ Rails.application.routes.draw do
           get 'check_duplicate'
         end
       end
+      resource :user, only: %i[update]
     end
   end
 end
