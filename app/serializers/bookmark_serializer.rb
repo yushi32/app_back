@@ -5,4 +5,6 @@ class BookmarkSerializer
   root_key!
 
   attributes :id, :title, :url
+
+  many :tags, resource: TagSerializer
 end
