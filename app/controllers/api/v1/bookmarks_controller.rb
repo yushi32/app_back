@@ -11,7 +11,7 @@ class Api::V1::BookmarksController < Api::V1::BaseController
       json_string = BookmarkSerializer.new(bookmark).serialize
       render json: json_string
     else
-      render json: {errors: bookmark.errors.full_messages}, status: 400
+      render json: { errors: bookmark.errors.full_messages }, status: 400
     end
   end
 
