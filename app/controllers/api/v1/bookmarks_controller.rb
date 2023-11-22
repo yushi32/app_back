@@ -15,6 +15,16 @@ class Api::V1::BookmarksController < Api::V1::BaseController
     end
   end
 
+  def update
+    bookmark = current_user.bookmarks.includes(:tags).find(params[:id])
+    if bookmark.save_with_tags(params.dig(:bookmark, :tag_name))
+      json_string = BookmarkSerializer.new(bookmark).serialize
+      render json: json_string
+    else
+      render json: { errors: bookmark.errors.full_messages }, status: 400
+    end
+  end
+
   def destroy
     bookmark = current_user.bookmarks.find(params[:id])
     if bookmark.destroy
