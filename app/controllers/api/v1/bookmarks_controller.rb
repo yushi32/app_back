@@ -1,6 +1,6 @@
 class Api::V1::BookmarksController < Api::V1::BaseController
   def index
-    bookmarks = current_user.bookmarks.order(created_at: :desc)
+    bookmarks = current_user.bookmarks.includes(:tags).order(created_at: :desc)
     json_string = BookmarkSerializer.new(bookmarks).serialize
     render json: json_string
   end
