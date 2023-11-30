@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_30_053337) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_30_055519) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,7 +30,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_30_053337) do
     t.string "caption", limit: 140
     t.integer "status", default: 0
     t.boolean "recommendable", default: false
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "folder_id"
@@ -65,6 +65,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_30_053337) do
   add_foreign_key "bookmark_tags", "bookmarks"
   add_foreign_key "bookmark_tags", "tags"
   add_foreign_key "bookmarks", "folders"
+  add_foreign_key "bookmarks", "users"
   add_foreign_key "folders", "folders", column: "parent_id"
   add_foreign_key "folders", "users"
 end
