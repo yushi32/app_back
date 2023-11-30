@@ -11,4 +11,8 @@ class User < ApplicationRecord
 
     User.create!(uid: user_info[:uid], name: user_info[:name])
   end
+
+  def root_folders
+    folders.includes(:children).root
+  end
 end
