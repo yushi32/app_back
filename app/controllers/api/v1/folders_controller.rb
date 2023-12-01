@@ -16,6 +16,13 @@ class Api::V1::FoldersController < Api::V1::BaseController
   end
 
   def update
+    folder = current_user.folders.find(params[:id])
+    if folder.update(folder_params)
+      json_string = FolderSerializer.new(folder).serialize
+      render json: json_string
+    else
+      render json: { errors: bookmark.errors.full_messages }, status: 400
+	  end
   end
 
   def destroy
@@ -24,6 +31,6 @@ class Api::V1::FoldersController < Api::V1::BaseController
   private
 
   def folder_params
-  	params.require(:folder).permit(:name)
+  	params.require(:folder).permit(:name, :parent_id)
   end
 end
