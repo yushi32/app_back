@@ -7,6 +7,7 @@ class Api::V1::FoldersController < Api::V1::BaseController
 
   def create
     folder = current_user.folders.build(folder_params)
+    folder.set_position(current_user.folders.length)
 	  if folder.save
 	  	json_string = FolderSerializer.new(folder).serialize
       render json: json_string
