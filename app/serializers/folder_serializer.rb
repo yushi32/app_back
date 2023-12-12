@@ -3,7 +3,7 @@ class FolderSerializer
 
   root_key!
 
-  attributes :id, :name, :parent_id
+  attributes :id, :name, :parent_id, :position
 
   many :children, resource: FolderSerializer
 end

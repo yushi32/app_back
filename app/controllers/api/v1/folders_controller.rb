@@ -31,6 +31,6 @@ class Api::V1::FoldersController < Api::V1::BaseController
   private
 
   def folder_params
-  	params.require(:folder).permit(:name, :parent_id)
+  	params.require(:folder).permit(:name, :parent_id, :position)
   end
 end
