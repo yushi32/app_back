@@ -15,4 +15,8 @@ class User < ApplicationRecord
   def root_folders
     folders.includes(:children).root
   end
+
+  def final_folder
+    folders.order(position: :asc).last
+  end
 end

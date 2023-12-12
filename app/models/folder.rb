@@ -9,7 +9,11 @@ class Folder < ApplicationRecord
 
   scope :root, -> { where(parent_id: nil) }
 
-  def set_position(folder_count)
-    self.position = 65535.0 * (folder_count)
+  def save_and_set_position(final_folder)
+    self.position = final_folder.position + 65535.0
+    save!
+    true
+  rescue StandardError
+    false
   end
 end
