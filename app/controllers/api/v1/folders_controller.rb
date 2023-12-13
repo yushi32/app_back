@@ -26,6 +26,12 @@ class Api::V1::FoldersController < Api::V1::BaseController
   end
 
   def destroy
+    folder = current_user.folders.find(params[:id])
+    if folder.destroy
+      head :no_content
+    else
+      render json: { error: 'Failed to destroy.' }, status: 422
+    end
   end
 
   private
