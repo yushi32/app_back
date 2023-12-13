@@ -1,4 +1,6 @@
 class Folder < ApplicationRecord
+  DEFAULT_POSITION_GAP = 65535.0
+
   validates :name, presence: true
   validates :position, presence: true, numericality: { only_float: true }
 
@@ -10,7 +12,7 @@ class Folder < ApplicationRecord
   scope :root, -> { where(parent_id: nil) }
 
   def save_and_set_position(final_folder)
-    self.position = final_folder.position + 65535.0
+    self.position = final_folder.position + DEFAULT_POSITION_GAP
     save!
     true
   rescue StandardError
