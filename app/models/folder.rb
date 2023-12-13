@@ -5,7 +5,7 @@ class Folder < ApplicationRecord
   belongs_to :user
   belongs_to :parent, class_name: :Folder, optional: true
   has_many :children, class_name: :Folder, foreign_key: :parent_id
-  has_many :bookmarks
+  has_many :bookmarks, dependent: :nullify
 
   scope :root, -> { where(parent_id: nil) }
 
