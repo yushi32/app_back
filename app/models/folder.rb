@@ -12,7 +12,7 @@ class Folder < ApplicationRecord
   scope :root, -> { where(parent_id: nil) }
 
   def save_and_set_position(final_folder)
-    self.position = final_folder.position + DEFAULT_POSITION_GAP
+      self.position = final_folder ? final_folder.position + DEFAULT_POSITION_GAP : DEFAULT_POSITION_GAP
     save!
     true
   rescue StandardError
