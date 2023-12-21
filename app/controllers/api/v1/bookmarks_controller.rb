@@ -17,6 +17,7 @@ class Api::V1::BookmarksController < Api::V1::BaseController
 
   def update
     bookmark = current_user.bookmarks.includes(:tags).find(params[:id])
+    bookmark.assign_attributes(bookmark_params)
     if bookmark.save_with_tags(params.dig(:bookmark, :tag_name))
       json_string = BookmarkSerializer.new(bookmark).serialize
       render json: json_string
@@ -47,6 +48,6 @@ class Api::V1::BookmarksController < Api::V1::BaseController
   private
 
   def bookmark_params
-    params.require(:bookmark).permit(:url, :title)
+    params.require(:bookmark).permit(:url, :title, :folder_id)
   end
 end

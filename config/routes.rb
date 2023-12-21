@@ -8,6 +8,7 @@ Rails.application.routes.draw do
           get 'check_duplicate'
         end
       end
+      resources :folders, only: %i[index create update destroy]
     end
   end
 end
