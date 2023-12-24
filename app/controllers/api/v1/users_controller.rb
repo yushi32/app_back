@@ -1,20 +1,24 @@
 class Api::V1::UsersController < Api::V1::BaseController
-  require 'net/http'
-  require 'uri'
+  include LineApiClient
 
   def update
-    id_token = params[:idToken]
-    channel_id = ENV["LIFF_CHANNEL_ID"]
-    
-    res = Net::HTTP.post_form(URI.parse('https://api.line.me/oauth2/v2.1/verify'), { 'id_token' => id_token, 'client_id' => channel_id })
-    line_user_id = JSON.parse(res.body)['sub']
+    if current_user.update(user_params)
+      head :no_content
+    else
+      render json: { errors: current_user.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
 
-    #if user.nil?
-    #  user = User.create(line_user_id:)
-    #elsif (session[:user_id] = user.id)
-    #  render json: user
-    #end
-    render json: current_user
+  private
 
+  # リクエストヘッダーにLINEのIDトークンが含まれる場合は、line_user_idの更新処理を行う
+  def user_params
+    if request.headers['X-LINE-AccessToken']
+      line_user_id = get_line_user_id(request.headers['X-LINE-AccessToken'])
+      { line_user_id: line_user_id }
+    else
+      # 現時点でどのカラムの更新も想定していないので、誤ってトリガーされてもパラメータを受け取らないようにする
+      params.require(:user).permit()
+    end
   end
 end
