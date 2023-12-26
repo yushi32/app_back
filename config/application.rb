@@ -20,6 +20,7 @@ module App
     # config.eager_load_paths << Rails.root.join("extras")
     config.time_zone = 'Tokyo'
     config.active_record.default_timezone = :local
+    config.active_job.queue_adapter = :sidekiq
 
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
