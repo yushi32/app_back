@@ -4,6 +4,7 @@ require 'uri'
 module LineApiClient
   LINE_CHANNEL_ID = ENV["LINE_CHANNEL_ID"].freeze
   CLIENT_SECRET = ENV['LINE_CHANNEL_SECRET'].freeze
+  CHANNEL_ACCESS_TOKEN = ENV['LINE_CHANNEL_ACCESS_TOKEN'].freeze
 
   def get_line_user_id(id_token)
     uri = URI.parse('https://api.line.me/oauth2/v2.1/verify')
@@ -18,6 +19,34 @@ module LineApiClient
     end
   rescue Net::ReadTimeout, Net::OpenTimeout
     Rails.logger.error("LINE ID Token verification request timed out.")
+    nil
+  rescue StandardError => e
+    Rails.logger.error("An error occurred during LINE ID Token verification: #{e.message}")
+    nil
+  end
+
+  def send_unread_bookmarks(line_user_id)
+    uri = URI.parse('https://api.line.me/v2/bot/message/push')
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = uri.scheme === 'https'
+
+    body = {
+      to: line_user_id,
+      messages: [
+        {
+            "type": "text",
+            "text": "test"
+        }
+      ]
+    }
+    headers = {
+      'Content-Type': 'application/json',
+      Authorization: "Bearer #{CHANNEL_ACCESS_TOKEN}"
+    }
+    res = http.post(uri.path, body.to_json, headers)
+
+  rescue Net::ReadTimeout, Net::OpenTimeout
+    Rails.logger.error('LINE messaging request timed out.')
     nil
   rescue StandardError => e
     Rails.logger.error("An error occurred during LINE ID Token verification: #{e.message}")
