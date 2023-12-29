@@ -12,7 +12,7 @@ class Notification < ApplicationRecord
   enum mode: { default: 0, folder_only: 1, tag_only: 2 }
 
   def valid_mode_matches_category_type
-    return if defult_mode? || folder_mode? || tag_mode?
+    return if default_mode? || folder_mode? || tag_mode?
 
     errors.add(:base, 'モードとカテゴリータイプが一致していません。')
   end
