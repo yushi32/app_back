@@ -1,6 +1,6 @@
 class Notification < ApplicationRecord
   belongs_to :user
-  belongs_to :category, polymorphic: true
+  belongs_to :category, polymorphic: true, optional: true
 
   validates :start_date, presence: true
   validates :scheduled_time, presence: true
