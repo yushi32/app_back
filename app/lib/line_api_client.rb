@@ -25,19 +25,14 @@ module LineApiClient
     nil
   end
 
-  def send_unread_bookmarks(line_user_id)
+  def send_push_message(line_user_id, messages)
     uri = URI.parse('https://api.line.me/v2/bot/message/push')
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = uri.scheme === 'https'
 
     body = {
       to: line_user_id,
-      messages: [
-        {
-            "type": "text",
-            "text": "test"
-        }
-      ]
+      messages: messages
     }
     headers = {
       'Content-Type': 'application/json',
