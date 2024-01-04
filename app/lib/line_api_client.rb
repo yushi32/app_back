@@ -53,6 +53,19 @@ module LineApiClient
     nil
   end
 
+  def build_messages_for_unnotified_bookmarks(user_id)
+    user = User.find(user_id)
+    bookmarks = user.bookmarks.for_notification
+    messages = []
+    bookmarks.each do |bookmark|
+      messages.push({
+        type: 'text',
+        text: "『#{bookmark.title}』\n#{bookmark.url}"
+      })
+    end
+    messages
+  end
+
   private
 
   def get_channel_access_token
