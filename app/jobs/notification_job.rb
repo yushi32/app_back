@@ -4,10 +4,13 @@ class NotificationJob < ApplicationJob
   queue_as :default
 
   def perform(notification_id, prev_schedule)
-    notification = Notification.find_by(id: notification_id)
+    notification = Notification.find(notification_id)
     return unless notification
 
-    send_unread_bookmarks(notification.user.line_user_id)
+    user = notification.user
+    messages = build_messages_for_unnotified_bookmarks(user.id)
+    send_push_message(user.line_user_id, messages)
+
     next_schedule = calculate_next_run(notification, prev_schedule)
     NotificationJob.set(wait_until: next_schedule).perform_later(notification_id, next_schedule)
   end
