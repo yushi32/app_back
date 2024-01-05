@@ -12,7 +12,10 @@ class NotificationJob < ApplicationJob
     send_push_message(user.line_user_id, messages)
 
     next_schedule = calculate_next_run(notification, prev_schedule)
-    NotificationJob.set(wait_until: next_schedule).perform_later(notification_id, next_schedule)
+    job = NotificationJob.set(wait_until: next_schedule).perform_later(notification_id, next_schedule)
+    # 通知設定を変更した時に待機中のジョブを削除するためにDBにジョブIDを保持する
+    job_id = job.provider_job_id
+    notification.update(job_id: job_id)
   end
 
   private
