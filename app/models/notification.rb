@@ -27,12 +27,16 @@ class Notification < ApplicationRecord
       day: now.day
     )
 
-    # 次に来る指定された曜日の日付を計算する
-    days_until_target = ((on_weekday_before_type_cast - now.wday) % 7).days
-    target_datetime = target_datetime + days_until_target
-
-    # もし計算された日時が過去になる場合は、次の週の同じ曜日に変更する
-    target_datetime += 7.days if target_datetime.past?
+    # 通知設定に従って次の実行日時を計算する
+    # 計算した日時が過去になってしまった場合は設定に従って先送りする
+    if on_weekday.present?
+      days_until_target = ((on_weekday_before_type_cast - now.wday) % 7).days
+      target_datetime = target_datetime + days_until_target
+      target_datetime += 7.days while target_datetime.past?
+    elsif interval_days.present?
+      target_datetime += interval_days.days
+      target_datetime += interval_days.days while target_datetime.past?
+    end
 
     target_datetime
   end
