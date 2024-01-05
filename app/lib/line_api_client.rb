@@ -26,6 +26,8 @@ module LineApiClient
   end
 
   def send_push_message(line_user_id, messages)
+    return if messages.nil?
+
     uri = URI.parse('https://api.line.me/v2/bot/message/push')
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = uri.scheme === 'https'
