@@ -51,14 +51,17 @@ module LineApiClient
   def build_messages_for_unnotified_bookmarks(user_id)
     user = User.find(user_id)
     bookmarks = user.bookmarks.for_notification
-    messages = []
+    messages = [{
+      type: 'text',
+      text: "後で読もうと思ったまま、お忘れの記事はないですか？\nLaterlessから未読のブックマークをお届けします。"
+    }]
     bookmarks.each do |bookmark|
       messages.push({
         type: 'text',
         text: "『#{bookmark.title}』\n#{bookmark.url}"
       })
     end
-    messages
+    messages.length == 1 ? nil : messages
   end
 
   private
