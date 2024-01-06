@@ -63,7 +63,7 @@ module LineApiClient
         text: "『#{bookmark.title}』\n#{bookmark.url}"
       })
     end
-    messages.length == 1 ? nil : messages
+    messages.length == 1 ? [nil, nil] : [messages, bookmarks]
   end
 
   private

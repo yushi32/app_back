@@ -8,8 +8,10 @@ class NotificationJob < ApplicationJob
     return unless notification
 
     user = notification.user
-    messages = build_messages_for_unnotified_bookmarks(user.id)
-    send_push_message(user.line_user_id, messages)
+    messages, bookmarks_to_notify = build_messages_for_unnotified_bookmarks(user.id)
+    if send_push_message(user.line_user_id, messages)
+      bookmarks_to_notify.update_all(status: :notified, updated_at: Time.zone.now)
+    end
 
     next_schedule = calculate_next_run(notification, prev_schedule)
     job = NotificationJob.set(wait_until: next_schedule).perform_later(notification_id, next_schedule)
