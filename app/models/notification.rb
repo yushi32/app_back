@@ -5,6 +5,7 @@ class Notification < ApplicationRecord
   validates :start_date, presence: true
   validates :scheduled_time, presence: true
   validates :mode, presence: true
+  validates :status, presence: true
 
   validate :valid_mode_matches_category_type
 
