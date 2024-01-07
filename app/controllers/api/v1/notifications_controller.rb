@@ -9,6 +9,12 @@ class Api::V1::NotificationsController < Api::V1::BaseController
     end
   end
 
+  def show
+    notification = current_user.notification
+    json_string = NotificationSerializer.new(notification).serialize
+    render json: json_string
+  end
+
   private
 
   def default_setting
