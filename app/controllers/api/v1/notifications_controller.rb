@@ -11,8 +11,12 @@ class Api::V1::NotificationsController < Api::V1::BaseController
 
   def show
     notification = current_user.notification
-    json_string = NotificationSerializer.new(notification).serialize
-    render json: json_string
+    if notification
+      json_string = NotificationSerializer.new(notification).serialize
+      render json: json_string
+    else
+      head :no_content
+    end
   end
 
   private
