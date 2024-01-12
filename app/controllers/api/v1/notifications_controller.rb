@@ -19,7 +19,20 @@ class Api::V1::NotificationsController < Api::V1::BaseController
     end
   end
 
+  def update
+    notification = current_user.notification
+    if notification.update(notification_params)
+      head :no_content
+    else
+      render json: { errors: notification.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   private
+
+  def notification_params
+    params.require(:notification).permit(:status)
+  end
 
   def default_setting
     now = Time.zone.now
