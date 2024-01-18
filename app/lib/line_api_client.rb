@@ -46,7 +46,7 @@ module LineApiClient
     Rails.logger.error('LINE messaging request timed out.')
     nil
   rescue StandardError => e
-    Rails.logger.error("An error occurred during LINE ID Token verification: #{e.message}")
+    Rails.logger.error("An error occurred during LINE messaging request: #{e.message}")
     nil
   end
 
