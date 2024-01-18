@@ -65,32 +65,4 @@ module LineApiClient
     end
     messages.length == 1 ? [nil, nil] : [messages, bookmarks]
   end
-
-  private
-
-  def get_channel_access_token
-    uri = URI.parse('https://api.line.me/oauth2/v3/token')
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = uri.scheme === 'https'
-  
-    body = {
-      grant_type: 'client_credentials',
-      client_id: LINE_CHANNEL_ID,
-      client_secret: CLIENT_SECRET
-    }
-    headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
-    res = http.post(uri.path, URI.encode_www_form(body), headers)
-  
-    if res.is_a?(Net::HTTPSuccess)
-      JSON.parse(res.body)['access_token']
-    else
-      nil
-    end
-  rescue Net::ReadTimeout, Net::OpenTimeout
-    Rails.logger.error('LINE ID Token verification request timed out.')
-    nil
-  rescue StandardError => e
-    Rails.logger.error("An error occurred during LINE ID Token verification: #{e.message}")
-    nil
-  end
 end
