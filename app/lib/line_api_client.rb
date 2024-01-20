@@ -26,7 +26,7 @@ module LineApiClient
   end
 
   def send_push_message(line_user_id, messages)
-    return if messages.nil?
+    return false if messages.nil?
 
     uri = URI.parse('https://api.line.me/v2/bot/message/push')
     http = Net::HTTP.new(uri.host, uri.port)
@@ -42,12 +42,13 @@ module LineApiClient
     }
     res = http.post(uri.path, body.to_json, headers)
 
+    res.is_a?(Net::HTTPSuccess)
   rescue Net::ReadTimeout, Net::OpenTimeout
     Rails.logger.error('LINE messaging request timed out.')
-    nil
+    false
   rescue StandardError => e
     Rails.logger.error("An error occurred during LINE messaging request: #{e.message}")
-    nil
+    false
   end
 
   def build_messages_for_unnotified_bookmarks(user_id)
