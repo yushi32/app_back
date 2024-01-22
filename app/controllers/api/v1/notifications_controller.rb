@@ -1,6 +1,6 @@
 class Api::V1::NotificationsController < Api::V1::BaseController
   def create
-    notification = current_user.build_notification(default_setting)
+    notification = current_user.build_notification(default_settings)
     if notification.save
       LineNotificationJob.set(wait_until: notification.next_run_at).perform_later(notification.id, notification.next_run_at)
       head :no_content
@@ -34,7 +34,7 @@ class Api::V1::NotificationsController < Api::V1::BaseController
     params.require(:notification).permit(:status)
   end
 
-  def default_setting
+  def default_settings
     now = Time.zone.now
     {
       start_date: now,
