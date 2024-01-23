@@ -4,6 +4,7 @@ class User < ApplicationRecord
 
   has_many :bookmarks, dependent: :destroy
   has_many :folders, dependent: :destroy
+  has_one :notification, dependent: :destroy
 
   def self.find_or_create_user(user_info)
     user = User.find_by(uid: user_info[:uid])
