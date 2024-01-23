@@ -11,6 +11,12 @@ class Bookmark < ApplicationRecord
 
   enum status: { unnotified:0, notified:1, read:2 }
 
+  scope :for_notification, -> {
+    unnotified_ids = unnotified.pluck(:id)
+    selected_ids = unnotified_ids.sample(3)
+    where(id: selected_ids).order(id: :asc)
+  }
+
   def save_with_tags(tag_name)
     if tag_name.present?
       new_tag = Tag.find_or_create_by(name: tag_name)

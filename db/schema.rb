@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_12_021218) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_07_054908) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -49,6 +49,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_12_021218) do
     t.index ["user_id"], name: "index_folders_on_user_id"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.datetime "start_date", null: false
+    t.time "scheduled_time", null: false
+    t.integer "interval_days"
+    t.integer "on_weekday"
+    t.integer "mode", default: 0
+    t.bigint "user_id", null: false
+    t.string "category_type"
+    t.bigint "category_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "job_id"
+    t.boolean "status", default: true, null: false
+    t.index ["category_type", "category_id"], name: "index_notifications_on_category"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -69,4 +86,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_12_021218) do
   add_foreign_key "bookmarks", "users"
   add_foreign_key "folders", "folders", column: "parent_id"
   add_foreign_key "folders", "users"
+  add_foreign_key "notifications", "users"
 end

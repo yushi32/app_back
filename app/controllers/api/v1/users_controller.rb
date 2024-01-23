@@ -1,6 +1,11 @@
 class Api::V1::UsersController < Api::V1::BaseController
   include LineApiClient
 
+  def show
+    json_string = UserSerializer.new(current_user).serialize
+    render json: json_string
+  end
+
   def update
     if current_user.update(user_params)
       head :no_content
