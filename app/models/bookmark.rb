@@ -20,7 +20,8 @@ class Bookmark < ApplicationRecord
   def save_with_tags(tag_name, current_user)
     ActiveRecord::Base.transaction do
       new_tag = Tag.find_or_create_by(name: tag_name)
-      add_tag(new_tag)
+      add_tag(new_tag) unless has_tag?(new_tag.id)
+
       current_user.add_tag(new_tag) unless current_user.has_tag?(new_tag.id)
 
       save!
@@ -34,5 +35,9 @@ class Bookmark < ApplicationRecord
   
   def add_tag(tag)
     tags << tag
+  end
+
+  def has_tag?(tag_id)
+    tags.exists?(id: tag_id)
   end
 end
