@@ -17,14 +17,22 @@ class Bookmark < ApplicationRecord
     where(id: selected_ids).order(id: :asc)
   }
 
-  def save_with_tags(tag_name)
-    if tag_name.present?
+  def save_with_tags(tag_name, current_user)
+    ActiveRecord::Base.transaction do
       new_tag = Tag.find_or_create_by(name: tag_name)
-      self.tags << new_tag
+      add_tag(new_tag)
+      current_user.add_tag(new_tag) unless current_user.has_tag?(new_tag.id)
+
+      save!
     end
-    save!
     true
   rescue StandardError
     false
+  end
+  
+  private
+  
+  def add_tag(tag)
+    tags << tag
   end
 end

@@ -22,4 +22,12 @@ class User < ApplicationRecord
   def final_folder
     folders.order(position: :asc).last
   end
+
+  def add_tag(tag)
+    tags << tag
+  end
+
+  def has_tag?(tag_id)
+    tags.exists?(id: tag_id)
+  end
 end
