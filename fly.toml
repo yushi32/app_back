@@ -14,7 +14,6 @@ app = "bin/rails server"
 worker = "bundle exec sidekiq"
 
 [http_service]
-  processes = ["app"]
   internal_port = 3000
   force_https = true
   auto_stop_machines = true
