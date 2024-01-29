@@ -17,6 +17,7 @@ Rails.application.routes.draw do
         end
       end
       resources :folders, only: %i[index create update destroy]
+      resources :tags, only: %i[index]
       resource :notification, only: %i[create show update]
     end
   end
