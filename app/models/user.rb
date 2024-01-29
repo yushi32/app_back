@@ -4,6 +4,8 @@ class User < ApplicationRecord
 
   has_many :bookmarks, dependent: :destroy
   has_many :folders, dependent: :destroy
+  has_many :user_tags, dependent: :destroy
+  has_many :tags, through: :user_tags
   has_one :notification, dependent: :destroy
 
   def self.find_or_create_user(user_info)
@@ -19,5 +21,13 @@ class User < ApplicationRecord
 
   def final_folder
     folders.order(position: :asc).last
+  end
+
+  def add_tag(tag)
+    tags << tag
+  end
+
+  def has_tag?(tag_id)
+    tags.exists?(id: tag_id)
   end
 end

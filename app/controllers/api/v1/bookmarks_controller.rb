@@ -18,7 +18,7 @@ class Api::V1::BookmarksController < Api::V1::BaseController
   def update
     bookmark = current_user.bookmarks.includes(:tags).find(params[:id])
     bookmark.assign_attributes(bookmark_params)
-    if bookmark.save_with_tags(params.dig(:bookmark, :tag_name))
+    if bookmark.save_with_tags(params.dig(:bookmark, :tag_name), current_user)
       json_string = BookmarkSerializer.new(bookmark).serialize
       render json: json_string
     else
