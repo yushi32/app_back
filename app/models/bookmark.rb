@@ -1,7 +1,7 @@
 class Bookmark < ApplicationRecord
   require 'metainspector'
 
-  validates :url, presence: true
+  validates :url, presence: true, uniqueness: { scope: :user_id }
   validates :title, presence: true
   validates :status, presence: true
   validates :caption, length: { maximum: 140 }
