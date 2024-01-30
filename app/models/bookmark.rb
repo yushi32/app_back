@@ -28,8 +28,18 @@ class Bookmark < ApplicationRecord
     delimiters = [' ', '|', ':', '/', '-', 'ー', '　', '｜', '：', '／', '－']
     delimiter_pattern = Regexp.union(delimiters.map { |delimiter| Regexp.escape(delimiter) })
 
-    page = MetaInspector.new("https://#{target_domain}")
-    page.title.split(delimiter_pattern).reject(&:empty?).first
+    max_retries = 3
+    begin
+      retries ||= 0
+      page = MetaInspector.new("https://#{target_domain}")
+      page.title.split(delimiter_pattern).reject(&:empty?).first
+    rescue Net::OpenTimeout, Net::ReadTimeout, MetaInspector::Error => e
+      retries += 1
+      retry if retries < max_retries
+      nil
+    rescue URI::InvalidURIError
+      nil
+    end
   end
 
   def save_with_tags(tag_name, current_user)
