@@ -24,8 +24,12 @@ class Bookmark < ApplicationRecord
     target_domain = URI.parse(url).host
     return nil if Bookmark.with_domain(target_domain).count < 2
 
+    # 取得したタイトルを仕切り文字で分割して、最初の非空文字列をタグ名とする
+    delimiters = [' ', '|', ':', '/', '-', 'ー', '　', '｜', '：', '／', '－']
+    delimiter_pattern = Regexp.union(delimiters.map { |delimiter| Regexp.escape(delimiter) })
+
     page = MetaInspector.new("https://#{target_domain}")
-    page.title
+    page.title.split(delimiter_pattern).reject(&:empty?).first
   end
 
   def save_with_tags(tag_name, current_user)
