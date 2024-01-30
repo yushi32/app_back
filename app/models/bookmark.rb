@@ -1,5 +1,7 @@
 class Bookmark < ApplicationRecord
-  validates :url, presence: true
+  require 'metainspector'
+
+  validates :url, presence: true, uniqueness: { scope: :user_id }
   validates :title, presence: true
   validates :status, presence: true
   validates :caption, length: { maximum: 140 }
@@ -16,6 +18,29 @@ class Bookmark < ApplicationRecord
     selected_ids = unnotified_ids.sample(3)
     where(id: selected_ids).order(id: :asc)
   }
+  scope :with_domain, ->(domain) { where('url LIKE ?', "%#{domain}%") }
+
+  def generate_tag_from_url
+    target_domain = URI.parse(url).host
+    return nil if Bookmark.with_domain(target_domain).count < 2
+
+    # 取得したタイトルを仕切り文字で分割して、最初の非空文字列をタグ名とする
+    delimiters = [' ', '|', ':', '/', '-', 'ー', '　', '｜', '：', '／', '－']
+    delimiter_pattern = Regexp.union(delimiters.map { |delimiter| Regexp.escape(delimiter) })
+
+    max_retries = 3
+    begin
+      retries ||= 0
+      page = MetaInspector.new("https://#{target_domain}")
+      page.title.split(delimiter_pattern).reject(&:empty?).first
+    rescue Net::OpenTimeout, Net::ReadTimeout, MetaInspector::Error => e
+      retries += 1
+      retry if retries < max_retries
+      nil
+    rescue URI::InvalidURIError
+      nil
+    end
+  end
 
   def save_with_tags(tag_name, current_user)
     ActiveRecord::Base.transaction do
@@ -29,7 +54,11 @@ class Bookmark < ApplicationRecord
       save!
     end
     true
-  rescue StandardError
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique::Error => e
+    Rails.logger.error("An error occurred when creating a new Bookmark record: #{e.class} - #{e.message}")
+    false
+  rescue StandardError => e
+    Rails.logger.error("An error occurred when creating a new Bookmark record: #{e.class} - #{e.message}")
     false
   end
   

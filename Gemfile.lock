@@ -66,6 +66,8 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
+    addressable (2.8.6)
+      public_suffix (>= 2.0.2, < 6.0)
     alba (3.0.1)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
@@ -81,13 +83,35 @@ GEM
       reline (>= 0.3.1)
     dockerfile-rails (1.5.12)
       rails (>= 3.0.0)
+    domain_name (0.6.20240107)
     dotenv (2.8.1)
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
       railties (>= 3.2)
     erubi (1.12.0)
+    faraday (2.9.0)
+      faraday-net_http (>= 2.0, < 3.2)
+    faraday-cookie_jar (0.0.7)
+      faraday (>= 0.8.0)
+      http-cookie (~> 1.0.0)
+    faraday-encoding (0.0.5)
+      faraday
+    faraday-follow_redirects (0.3.0)
+      faraday (>= 1, < 3)
+    faraday-gzip (1.0.0)
+      faraday (>= 1.0)
+      zlib (~> 2.1)
+    faraday-http-cache (2.5.1)
+      faraday (>= 0.8)
+    faraday-net_http (3.1.0)
+      net-http
+    faraday-retry (2.2.0)
+      faraday (~> 2.0)
+    fastimage (2.3.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    http-cookie (1.0.5)
+      domain_name (~> 0.5)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     io-console (0.6.0)
@@ -106,10 +130,25 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.2)
+    metainspector (5.15.0)
+      addressable (~> 2.8.4)
+      faraday (~> 2.5)
+      faraday-cookie_jar (~> 0.0)
+      faraday-encoding (~> 0.0)
+      faraday-follow_redirects (~> 0.3)
+      faraday-gzip (>= 0.1, < 2.0)
+      faraday-http-cache (~> 2.5)
+      faraday-retry (~> 2.0)
+      fastimage (~> 2.2)
+      nesty (~> 1.0)
+      nokogiri (~> 1.13)
     method_source (1.0.0)
     mini_mime (1.1.5)
     minitest (5.20.0)
     msgpack (1.7.2)
+    nesty (1.0.2)
+    net-http (0.4.1)
+      uri
     net-imap (0.4.2)
       date
       net-protocol
@@ -133,6 +172,7 @@ GEM
       pry (>= 0.13, < 0.15)
     psych (5.1.1.1)
       stringio
+    public_suffix (5.0.4)
     puma (5.6.7)
       nio4r (~> 2.0)
     racc (1.7.1)
@@ -191,10 +231,12 @@ GEM
     timeout (0.4.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    uri (0.13.0)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     zeitwerk (2.6.12)
+    zlib (2.1.1)
 
 PLATFORMS
   aarch64-linux
@@ -208,6 +250,7 @@ DEPENDENCIES
   dotenv-rails
   jsonapi-serializer
   jwt
+  metainspector
   pg (~> 1.5.4)
   pry-byebug
   puma (~> 5.0)
