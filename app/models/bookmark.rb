@@ -1,4 +1,6 @@
 class Bookmark < ApplicationRecord
+  require 'metainspector'
+
   validates :url, presence: true
   validates :title, presence: true
   validates :status, presence: true
@@ -16,6 +18,15 @@ class Bookmark < ApplicationRecord
     selected_ids = unnotified_ids.sample(3)
     where(id: selected_ids).order(id: :asc)
   }
+  scope :with_domain, ->(domain) { where('url LIKE ?', "%#{domain}%") }
+
+  def generate_tag_from_url
+    target_domain = URI.parse(url).host
+    return nil if Bookmark.with_domain(target_domain).count < 2
+
+    page = MetaInspector.new("https://#{target_domain}")
+    page.title
+  end
 
   def save_with_tags(tag_name, current_user)
     ActiveRecord::Base.transaction do
