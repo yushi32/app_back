@@ -54,7 +54,11 @@ class Bookmark < ApplicationRecord
       save!
     end
     true
-  rescue StandardError
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique::Error => e
+    Rails.logger.error("An error occurred when creating a new Bookmark record: #{e.class} - #{e.message}")
+    false
+  rescue StandardError => e
+    Rails.logger.error("An error occurred when creating a new Bookmark record: #{e.class} - #{e.message}")
     false
   end
   
