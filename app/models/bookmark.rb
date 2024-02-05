@@ -18,11 +18,11 @@ class Bookmark < ApplicationRecord
     selected_ids = unnotified_ids.sample(3)
     where(id: selected_ids).order(id: :asc)
   }
-  scope :with_domain, ->(domain) { where('url LIKE ?', "%#{domain}%") }
 
   def generate_tag_from_url
     target_domain = URI.parse(url).host
-    return nil if Bookmark.with_domain(target_domain).count < 2
+    same_domain_count = user.bookmarks.where('url LIKE ?', "%#{target_domain}%").count
+    return nil if same_domain_count < 2
 
     # 取得したタイトルを仕切り文字で分割して、最初の非空文字列をタグ名とする
     delimiters = [' ', '|', ':', '/', '-', 'ー', '　', '｜', '：', '／', '－']
