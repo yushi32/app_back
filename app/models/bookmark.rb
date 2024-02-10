@@ -48,7 +48,7 @@ class Bookmark < ApplicationRecord
         new_tag = Tag.find_or_create_by(name: tag_name)
         add_tag(new_tag) unless has_tag?(new_tag.id)
 
-        current_user.add_tag(new_tag) unless current_user.has_tag?(new_tag.id)
+        current_user.add_tag(new_tag) unless current_user.tag_used?(new_tag.id)
 
       end
       save!
