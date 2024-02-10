@@ -11,7 +11,7 @@ class Bookmark < ApplicationRecord
   has_many :bookmark_tags, dependent: :destroy
   has_many :tags, through: :bookmark_tags
 
-  enum status: { unnotified:0, notified:1, read:2 }
+  enum status: { unnotified: 0, notified: 1, read: 2 }
 
   scope :for_notification, -> {
     unnotified_ids = unnotified.pluck(:id)
