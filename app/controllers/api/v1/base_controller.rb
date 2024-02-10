@@ -14,7 +14,6 @@ class Api::V1::BaseController < ApplicationController
       else
         @_current_user = User.find_or_create_user(result)
       end
-
     end
   end
 
