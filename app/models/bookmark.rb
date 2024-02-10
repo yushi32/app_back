@@ -46,7 +46,7 @@ class Bookmark < ApplicationRecord
     ActiveRecord::Base.transaction do
       if tag_name.present?
         new_tag = Tag.find_or_create_by(name: tag_name)
-        add_tag(new_tag) unless has_tag?(new_tag.id)
+        add_tag(new_tag) unless tagged?(new_tag.id)
 
         current_user.add_tag(new_tag) unless current_user.tag_used?(new_tag.id)
 
@@ -68,7 +68,7 @@ class Bookmark < ApplicationRecord
     tags << tag
   end
 
-  def has_tag?(tag_id)
+  def tagged?(tag_id)
     tags.exists?(id: tag_id)
   end
 end
