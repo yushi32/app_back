@@ -33,7 +33,7 @@ class Bookmark < ApplicationRecord
       retries ||= 0
       page = MetaInspector.new("https://#{target_domain}")
       page.title.split(delimiter_pattern).reject(&:empty?).first
-    rescue Net::OpenTimeout, Net::ReadTimeout, MetaInspector::Error => e
+    rescue Net::OpenTimeout, Net::ReadTimeout, MetaInspector::Error
       retries += 1
       retry if retries < max_retries
       nil
