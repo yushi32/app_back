@@ -8,10 +8,13 @@ module LineApiClient
 
   def get_line_user_id(id_token)
     uri = URI.parse('https://api.line.me/oauth2/v2.1/verify')
-    res = Net::HTTP.post_form(uri, {
-      'id_token': id_token,
-      'client_id': CHANNEL_ID
-    })
+    res = Net::HTTP.post_form(
+      uri,
+      {
+        'id_token': id_token,
+        'client_id': CHANNEL_ID
+      }
+    )
     if res.is_a?(Net::HTTPSuccess)
       JSON.parse(res.body)['sub']
     else
@@ -54,15 +57,19 @@ module LineApiClient
   def build_messages_for_unnotified_bookmarks(user_id)
     user = User.find(user_id)
     bookmarks = user.bookmarks.for_notification
-    messages = [{
-      type: 'text',
-      text: "後で読もうと思ったまま、お忘れの記事はないですか？\nLaterlessから未読のブックマークをお届けします。"
-    }]
-    bookmarks.each do |bookmark|
-      messages.push({
+    messages = [
+      {
         type: 'text',
-        text: "『#{bookmark.title}』\n#{bookmark.url}"
-      })
+        text: "後で読もうと思ったまま、お忘れの記事はないですか？\nLaterlessから未読のブックマークをお届けします。"
+      }
+    ]
+    bookmarks.each do |bookmark|
+      messages.push(
+        {
+          type: 'text',
+          text: "『#{bookmark.title}』\n#{bookmark.url}"
+        }
+      )
     end
     messages.length == 1 ? [nil, nil] : [messages, bookmarks]
   end
