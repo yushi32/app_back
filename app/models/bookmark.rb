@@ -61,9 +61,9 @@ class Bookmark < ApplicationRecord
     Rails.logger.error("An error occurred when creating a new Bookmark record: #{e.class} - #{e.message}")
     false
   end
-  
+
   private
-  
+
   def add_tag(tag)
     tags << tag
   end

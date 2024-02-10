@@ -23,8 +23,8 @@ class Notification < ApplicationRecord
     now = Time.zone.now
     # 指定された時刻でDateTimeを作成する
     target_datetime = scheduled_time.change(
-      year: now.year, 
-      month: now.month, 
+      year: now.year,
+      month: now.month,
       day: now.day
     )
 
