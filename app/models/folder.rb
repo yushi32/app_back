@@ -1,5 +1,5 @@
 class Folder < ApplicationRecord
-  DEFAULT_POSITION_GAP = 65535.0
+  DEFAULT_POSITION_GAP = 65_535.0
 
   validates :name, presence: true
   validates :position, presence: true, numericality: { only_float: true }
