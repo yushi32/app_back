@@ -1,14 +1,14 @@
-require "jwt"
-require "net/http"
+require 'jwt'
+require 'net/http'
 
 module FirebaseAuth
-  ISSUER_PREFIX = "https://securetoken.google.com/".freeze
-  ALGORITHM = "RS256".freeze
+  ISSUER_PREFIX = 'https://securetoken.google.com/'.freeze
+  ALGORITHM = 'RS256'.freeze
 
-  FIREBASE_PROJECT_ID = ENV["FIREBASE_PROJECT_ID"]
+  FIREBASE_PROJECT_ID = ENV['FIREBASE_PROJECT_ID']
 
   CERT_URI =
-    "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com".freeze
+    'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com'.freeze
 
   def verify_id_token(id_token)
     payload, header = decode_unverified(id_token)
@@ -17,9 +17,9 @@ module FirebaseAuth
     errors = verify(id_token, public_key)
 
     if errors.empty?
-      { uid: payload["user_id"], name: payload["name"] }
+      { uid: payload['user_id'], name: payload['name'] }
     else
-      { errors: errors.join(" / ") }
+      { errors: errors.join(' / ') }
     end
   end
 
@@ -41,7 +41,7 @@ module FirebaseAuth
   end
 
   def get_public_key(header)
-    certificate = find_certificate(header["kid"])
+    certificate = find_certificate(header['kid'])
     OpenSSL::X509::Certificate.new(certificate).public_key
   rescue OpenSSL::X509::CertificateError => e
     raise "Invalid certificate. #{e.message}"
@@ -63,7 +63,7 @@ module FirebaseAuth
 
     req = Net::HTTP::Get.new(uri.path)
     res = https.request(req)
-    unless res.code == "200"
+    unless res.code == '200'
       raise "Error: can't obtain valid public key certificates from Google."
     end
 
@@ -82,7 +82,7 @@ module FirebaseAuth
           options: decode_options
         )
     rescue JWT::ExpiredSignature
-      errors << "Firebase ID token has expired. Get a fresh token from your app and try again."
+      errors << 'Firebase ID token has expired. Get a fresh token from your app and try again.'
     rescue JWT::InvalidIatError
       errors << "Invalid ID token. 'Issued-at time' (iat) must be in the past."
     rescue JWT::InvalidIssuerError
@@ -95,8 +95,8 @@ module FirebaseAuth
       errors << "Invalid ID token. #{e.message}"
     end
 
-    sub = decoded_token[0]["sub"]
-    alg = decoded_token[1]["alg"]
+    sub = decoded_token[0]['sub']
+    alg = decoded_token[1]['alg']
 
     unless sub.is_a?(String) && !sub.empty?
       errors << "Invalid ID token. 'Subject' (sub) must be a non-empty string."
