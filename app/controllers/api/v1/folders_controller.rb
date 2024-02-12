@@ -7,12 +7,12 @@ class Api::V1::FoldersController < Api::V1::BaseController
 
   def create
     folder = current_user.folders.build(folder_params)
-	  if folder.save_and_set_position(current_user.final_folder)
-	  	json_string = FolderSerializer.new(folder).serialize
+    if folder.save_and_set_position(current_user.final_folder)
+      json_string = FolderSerializer.new(folder).serialize
       render json: json_string
     else
       render json: { errors: bookmark.errors.full_messages }, status: 400
-	  end
+    end
   end
 
   def update
@@ -22,7 +22,7 @@ class Api::V1::FoldersController < Api::V1::BaseController
       render json: json_string
     else
       render json: { errors: bookmark.errors.full_messages }, status: 400
-	  end
+    end
   end
 
   def destroy
@@ -37,6 +37,6 @@ class Api::V1::FoldersController < Api::V1::BaseController
   private
 
   def folder_params
-  	params.require(:folder).permit(:name, :parent_id, :position)
+    params.require(:folder).permit(:name, :parent_id, :position)
   end
 end
