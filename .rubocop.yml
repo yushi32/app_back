@@ -42,6 +42,8 @@ Metrics/CyclomaticComplexity:
 Metrics/MethodLength:
   CountComments: false
   Max: 30
+  Exclude:
+    - 'app/lib/firebase_auth.rb'
 
 Naming/AccessorMethodName:
   Exclude:
