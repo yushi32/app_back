@@ -19,7 +19,7 @@ module LineApiClient
       JSON.parse(res.body)['sub']
     end
   rescue Net::ReadTimeout, Net::OpenTimeout
-    Rails.logger.error("LINE ID Token verification request timed out.")
+    Rails.logger.error('LINE ID Token verification request timed out.')
     nil
   rescue StandardError => e
     Rails.logger.error("An error occurred during LINE ID Token verification: #{e.message}")
