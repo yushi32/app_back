@@ -42,8 +42,7 @@ module FirebaseAuth
 
   def get_public_key(header)
     certificate = find_certificate(header["kid"])
-    public_key = OpenSSL::X509::Certificate.new(certificate).public_key
-    public_key
+    OpenSSL::X509::Certificate.new(certificate).public_key
   rescue OpenSSL::X509::CertificateError => e
     raise "Invalid certificate. #{e.message}"
   end
