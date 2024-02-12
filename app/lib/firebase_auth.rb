@@ -27,7 +27,7 @@ module FirebaseAuth
 
   def decode_unverified(token)
     decode_token(
-      token: token,
+      token:,
       key: nil,
       verify: false,
       options: {
@@ -79,8 +79,8 @@ module FirebaseAuth
     begin
       decoded_token =
         decode_token(
-          token: token,
-          key: key,
+          token:,
+          key:,
           verify: true,
           options: decode_options,
         )

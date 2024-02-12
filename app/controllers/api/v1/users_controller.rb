@@ -20,7 +20,7 @@ class Api::V1::UsersController < Api::V1::BaseController
   def user_params
     if request.headers['X-LINE-AccessToken']
       line_user_id = get_line_user_id(request.headers['X-LINE-AccessToken'])
-      { line_user_id: line_user_id }
+      { line_user_id: }
     else
       # 現時点でどのカラムの更新も想定していないので、誤ってトリガーされてもパラメータを受け取らないようにする
       params.require(:user).permit()

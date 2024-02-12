@@ -37,7 +37,7 @@ module LineApiClient
 
     body = {
       to: line_user_id,
-      messages: messages
+      messages:
     }
     headers = {
       'Content-Type': 'application/json',
