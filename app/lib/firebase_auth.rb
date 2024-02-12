@@ -17,9 +17,9 @@ module FirebaseAuth
     errors = verify(id_token, public_key)
 
     if errors.empty?
-      return { uid: payload["user_id"], name: payload["name"] }
+      { uid: payload["user_id"], name: payload["name"] }
     else
-      return { errors: errors.join(" / ") }
+      { errors: errors.join(" / ") }
     end
   end
 
