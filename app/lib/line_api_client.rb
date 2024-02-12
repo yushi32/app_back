@@ -31,7 +31,7 @@ module LineApiClient
 
     uri = URI.parse('https://api.line.me/v2/bot/message/push')
     http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = uri.scheme === 'https'
+    http.use_ssl = uri.scheme == 'https'
 
     body = {
       to: line_user_id,
