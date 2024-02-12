@@ -32,7 +32,7 @@ module FirebaseAuth
       verify: false,
       options: {
         algorithm: ALGORITHM
-      },
+      }
     )
   end
 
@@ -82,7 +82,7 @@ module FirebaseAuth
           token:,
           key:,
           verify: true,
-          options: decode_options,
+          options: decode_options
         )
     rescue JWT::ExpiredSignature
       errors << "Firebase ID token has expired. Get a fresh token from your app and try again."
