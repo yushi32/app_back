@@ -13,7 +13,7 @@ class Bookmark < ApplicationRecord
 
   enum status: { unnotified: 0, notified: 1, read: 2 }
 
-  scope :for_notification, -> {
+  scope :for_notification, lambda {
     unnotified_ids = unnotified.pluck(:id)
     selected_ids = unnotified_ids.sample(3)
     where(id: selected_ids).order(id: :asc)
