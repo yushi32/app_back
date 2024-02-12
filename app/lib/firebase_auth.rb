@@ -31,7 +31,7 @@ module FirebaseAuth
       key: nil,
       verify: false,
       options: {
-        algorithm: ALGORITHM,
+        algorithm: ALGORITHM
       },
     )
   end
@@ -119,7 +119,7 @@ module FirebaseAuth
       algorithm: ALGORITHM,
       verify_iat: true,
       verify_iss: true,
-      verify_aud: true,
+      verify_aud: true
     }
   end
 end
