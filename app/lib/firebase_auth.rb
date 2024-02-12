@@ -53,8 +53,7 @@ module FirebaseAuth
       raise "Invalid 'kid', do not correspond to one of valid public keys."
     end
 
-    valid_certificate = certificates[kid]
-    return valid_certificate
+    certificates[kid]
   end
 
   def fetch_certificates
@@ -68,8 +67,7 @@ module FirebaseAuth
       raise "Error: can't obtain valid public key certificates from Google."
     end
 
-    certificates = JSON.parse(res.body)
-    return certificates
+    JSON.parse(res.body)
   end
 
   def verify(token, key)
@@ -108,7 +106,7 @@ module FirebaseAuth
       errors << "Invalid ID token. 'alg' must be '#{ALGORITHM}', but got #{alg}."
     end
 
-    return errors
+    errors
   end
 
   def decode_options
