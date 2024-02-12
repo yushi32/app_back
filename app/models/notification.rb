@@ -32,7 +32,7 @@ class Notification < ApplicationRecord
     # 計算した日時が過去になってしまった場合は設定に従って先送りする
     if on_weekday.present?
       days_until_target = ((on_weekday_before_type_cast - now.wday) % 7).days
-      target_datetime = target_datetime + days_until_target
+      target_datetime += days_until_target
       target_datetime += 7.days while target_datetime.past?
     elsif interval_days.present?
       target_datetime += interval_days.days
