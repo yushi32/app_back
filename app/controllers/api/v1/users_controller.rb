@@ -23,7 +23,7 @@ class Api::V1::UsersController < Api::V1::BaseController
       { line_user_id: }
     else
       # 現時点でどのカラムの更新も想定していないので、誤ってトリガーされてもパラメータを受け取らないようにする
-      params.require(:user).permit()
+      params.require(:user).permit
     end
   end
 end
