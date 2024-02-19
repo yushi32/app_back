@@ -32,7 +32,7 @@ class Api::V1::BookmarksController < Api::V1::BaseController
     if bookmark.destroy
       head :no_content
     else
-      render json: { error: "Failed to destroy" }, status: 422
+      render json: { error: 'Failed to destroy.' }, status: 422
     end
   end
 

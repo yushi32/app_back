@@ -27,7 +27,7 @@ class User < ApplicationRecord
     tags << tag
   end
 
-  def has_tag?(tag_id)
+  def tag_used?(tag_id)
     tags.exists?(id: tag_id)
   end
 end

@@ -1,14 +1,14 @@
-require "jwt"
-require "net/http"
+require 'jwt'
+require 'net/http'
 
 module FirebaseAuth
-  ISSUER_PREFIX = "https://securetoken.google.com/".freeze
-  ALGORITHM = "RS256".freeze
+  ISSUER_PREFIX = 'https://securetoken.google.com/'.freeze
+  ALGORITHM = 'RS256'.freeze
 
-  FIREBASE_PROJECT_ID = ENV["FIREBASE_PROJECT_ID"]
+  FIREBASE_PROJECT_ID = ENV['FIREBASE_PROJECT_ID']
 
   CERT_URI =
-    "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com".freeze
+    'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com'.freeze
 
   def verify_id_token(id_token)
     payload, header = decode_unverified(id_token)
@@ -17,9 +17,9 @@ module FirebaseAuth
     errors = verify(id_token, public_key)
 
     if errors.empty?
-      return { uid: payload["user_id"], name: payload["name"] }
+      { uid: payload['user_id'], name: payload['name'] }
     else
-      return { errors: errors.join(" / ") }
+      { errors: errors.join(' / ') }
     end
   end
 
@@ -27,12 +27,12 @@ module FirebaseAuth
 
   def decode_unverified(token)
     decode_token(
-      token: token,
+      token:,
       key: nil,
       verify: false,
       options: {
-        algorithm: ALGORITHM,
-      },
+        algorithm: ALGORITHM
+      }
     )
   end
 
@@ -41,12 +41,10 @@ module FirebaseAuth
   end
 
   def get_public_key(header)
-    certificate = find_certificate(header["kid"])
-    public_key = OpenSSL::X509::Certificate.new(certificate).public_key
+    certificate = find_certificate(header['kid'])
+    OpenSSL::X509::Certificate.new(certificate).public_key
   rescue OpenSSL::X509::CertificateError => e
     raise "Invalid certificate. #{e.message}"
-
-    return public_key
   end
 
   def find_certificate(kid)
@@ -55,8 +53,7 @@ module FirebaseAuth
       raise "Invalid 'kid', do not correspond to one of valid public keys."
     end
 
-    valid_certificate = certificates[kid]
-    return valid_certificate
+    certificates[kid]
   end
 
   def fetch_certificates
@@ -66,12 +63,11 @@ module FirebaseAuth
 
     req = Net::HTTP::Get.new(uri.path)
     res = https.request(req)
-    unless res.code == "200"
+    unless res.code == '200'
       raise "Error: can't obtain valid public key certificates from Google."
     end
 
-    certificates = JSON.parse(res.body)
-    return certificates
+    JSON.parse(res.body)
   end
 
   def verify(token, key)
@@ -80,13 +76,13 @@ module FirebaseAuth
     begin
       decoded_token =
         decode_token(
-          token: token,
-          key: key,
+          token:,
+          key:,
           verify: true,
-          options: decode_options,
+          options: decode_options
         )
     rescue JWT::ExpiredSignature
-      errors << "Firebase ID token has expired. Get a fresh token from your app and try again."
+      errors << 'Firebase ID token has expired. Get a fresh token from your app and try again.'
     rescue JWT::InvalidIatError
       errors << "Invalid ID token. 'Issued-at time' (iat) must be in the past."
     rescue JWT::InvalidIssuerError
@@ -99,8 +95,8 @@ module FirebaseAuth
       errors << "Invalid ID token. #{e.message}"
     end
 
-    sub = decoded_token[0]["sub"]
-    alg = decoded_token[1]["alg"]
+    sub = decoded_token[0]['sub']
+    alg = decoded_token[1]['alg']
 
     unless sub.is_a?(String) && !sub.empty?
       errors << "Invalid ID token. 'Subject' (sub) must be a non-empty string."
@@ -110,7 +106,7 @@ module FirebaseAuth
       errors << "Invalid ID token. 'alg' must be '#{ALGORITHM}', but got #{alg}."
     end
 
-    return errors
+    errors
   end
 
   def decode_options
@@ -120,7 +116,7 @@ module FirebaseAuth
       algorithm: ALGORITHM,
       verify_iat: true,
       verify_iss: true,
-      verify_aud: true,
+      verify_aud: true
     }
   end
 end
