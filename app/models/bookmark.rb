@@ -4,7 +4,7 @@ class Bookmark < ApplicationRecord
   validates :url, presence: true, uniqueness: { scope: :user_id }
   validates :title, presence: true
   validates :status, presence: true
-  validates :note, length: { maximum: 140 }
+  validates :note, length: { maximum: 500 }
 
   belongs_to :user
   belongs_to :folder, optional: true
