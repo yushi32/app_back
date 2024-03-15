@@ -49,6 +49,6 @@ class Api::V1::BookmarksController < Api::V1::BaseController
   private
 
   def bookmark_params
-    params.require(:bookmark).permit(:url, :title, :thumbnail, :status, :folder_id)
+    params.require(:bookmark).permit(:url, :title, :thumbnail, :note, :status, :folder_id)
   end
 end
