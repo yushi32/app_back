@@ -44,7 +44,10 @@ class Bookmark < ApplicationRecord
 
   def save_with_tags(tag_names, current_user)
     ActiveRecord::Base.transaction do
-      if tag_names.present?
+      # tag_namesが空の場合、すべてのタグを削除する
+      if tag_names.blank?
+        tags.clear
+      else
         # 更新前のタグと差分を特定
         current_tags = tags.pluck(:name)
         tags_to_remove = current_tags - tag_names
