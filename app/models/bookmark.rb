@@ -45,11 +45,21 @@ class Bookmark < ApplicationRecord
   def save_with_tags(tag_names, current_user)
     ActiveRecord::Base.transaction do
       if tag_names.present?
+        current_tags = tags.pluck(:name)
+        tags_to_remove = current_tags - tag_names
+
         tag_names.each do |tag_name|
           new_tag = Tag.find_or_create_by(name: tag_name)
           add_tag(new_tag) unless tagged?(new_tag.id)
 
           current_user.add_tag(new_tag) unless current_user.tag_used?(new_tag.id)
+        end
+
+        if tags_to_remove.present?
+          tags_to_remove.each do |tag_name|
+            tag_to_remove = Tag.find_by(name: tag_name)
+            tags.delete(tag_to_remove)
+          end
         end
       end
       save!
