@@ -42,14 +42,15 @@ class Bookmark < ApplicationRecord
     end
   end
 
-  def save_with_tags(tag_name, current_user)
+  def save_with_tags(tag_names, current_user)
     ActiveRecord::Base.transaction do
-      if tag_name.present?
-        new_tag = Tag.find_or_create_by(name: tag_name)
-        add_tag(new_tag) unless tagged?(new_tag.id)
+      if tag_names.present?
+        tag_names.each do |tag_name|
+          new_tag = Tag.find_or_create_by(name: tag_name)
+          add_tag(new_tag) unless tagged?(new_tag.id)
 
-        current_user.add_tag(new_tag) unless current_user.tag_used?(new_tag.id)
-
+          current_user.add_tag(new_tag) unless current_user.tag_used?(new_tag.id)
+        end
       end
       save!
     end
