@@ -8,7 +8,8 @@ class Api::V1::BookmarksController < Api::V1::BaseController
   def create
     bookmark = current_user.bookmarks.build(bookmark_params)
     auto_generate_tag = bookmark.generate_tag_from_url
-    if bookmark.save_with_tags(auto_generate_tag, current_user)
+    tag_names = auto_generate_tag ? [auto_generate_tag] : []
+    if bookmark.save_with_tags(tag_names, current_user)
       json_string = BookmarkSerializer.new(bookmark).serialize
       render json: json_string
     else
