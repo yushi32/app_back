@@ -8,7 +8,7 @@ class Bookmark < ApplicationRecord
 
   belongs_to :user
   belongs_to :folder, optional: true
-  has_many :bookmark_tags, dependent: :destroy
+  has_many :bookmark_tags, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :tags, through: :bookmark_tags
 
   enum status: { unnotified: 0, notified: 1, read: 2 }
