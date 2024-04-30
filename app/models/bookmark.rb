@@ -4,11 +4,11 @@ class Bookmark < ApplicationRecord
   validates :url, presence: true, uniqueness: { scope: :user_id }
   validates :title, presence: true
   validates :status, presence: true
-  validates :caption, length: { maximum: 140 }
+  validates :note, length: { maximum: 500 }
 
   belongs_to :user
   belongs_to :folder, optional: true
-  has_many :bookmark_tags, dependent: :destroy
+  has_many :bookmark_tags, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :tags, through: :bookmark_tags
 
   enum status: { unnotified: 0, notified: 1, read: 2 }
@@ -42,14 +42,21 @@ class Bookmark < ApplicationRecord
     end
   end
 
-  def save_with_tags(tag_name, current_user)
+  def save_with_tags(tag_names, current_user)
     ActiveRecord::Base.transaction do
-      if tag_name.present?
-        new_tag = Tag.find_or_create_by(name: tag_name)
-        add_tag(new_tag) unless tagged?(new_tag.id)
+      # tag_namesが空の場合、関連付けられているすべてのタグを削除する
+      if tag_names.blank?
+        tags.clear if tags.present?
+      else
+        # 更新前のタグと差分を特定
+        current_tags = tags.pluck(:name)
+        tags_to_remove = current_tags - tag_names
 
-        current_user.add_tag(new_tag) unless current_user.tag_used?(new_tag.id)
+        # 未登録のタグを追加する
+        add_new_tags(tag_names, current_user)
 
+        # タグの削除処理
+        remove_unused_tags(tags_to_remove)
       end
       save!
     end
@@ -63,6 +70,24 @@ class Bookmark < ApplicationRecord
   end
 
   private
+
+  def add_new_tags(tag_names, current_user)
+    tag_names.each do |tag_name|
+      new_tag = Tag.find_or_create_by(name: tag_name)
+      add_tag(new_tag) unless tagged?(new_tag.id)
+
+      current_user.add_tag(new_tag) unless current_user.tag_used?(new_tag.id)
+    end
+  end
+
+  def remove_unused_tags(tags_to_remove)
+    return unless tags_to_remove.present?
+
+    tags_to_remove.each do |tag_name|
+      tag_to_remove = Tag.find_by(name: tag_name)
+      tags.delete(tag_to_remove)
+    end
+  end
 
   def add_tag(tag)
     tags << tag
