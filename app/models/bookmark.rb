@@ -53,12 +53,7 @@ class Bookmark < ApplicationRecord
         tags_to_remove = current_tags - tag_names
 
         # 未登録のタグを追加する
-        tag_names.each do |tag_name|
-          new_tag = Tag.find_or_create_by(name: tag_name)
-          add_tag(new_tag) unless tagged?(new_tag.id)
-
-          current_user.add_tag(new_tag) unless current_user.tag_used?(new_tag.id)
-        end
+        add_new_tags(tag_names, current_user)
 
         # タグの削除処理
         if tags_to_remove.present?
@@ -80,6 +75,15 @@ class Bookmark < ApplicationRecord
   end
 
   private
+
+  def add_new_tags(tag_names, current_user)
+    tag_names.each do |tag_name|
+      new_tag = Tag.find_or_create_by(name: tag_name)
+      add_tag(new_tag) unless tagged?(new_tag.id)
+
+      current_user.add_tag(new_tag) unless current_user.tag_used?(new_tag.id)
+    end
+  end
 
   def add_tag(tag)
     tags << tag
