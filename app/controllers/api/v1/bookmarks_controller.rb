@@ -8,7 +8,8 @@ class Api::V1::BookmarksController < Api::V1::BaseController
   def create
     bookmark = current_user.bookmarks.build(bookmark_params)
     auto_generate_tag = bookmark.generate_tag_from_url
-    if bookmark.save_with_tags(auto_generate_tag, current_user)
+    tag_names = auto_generate_tag ? [auto_generate_tag] : []
+    if bookmark.save_with_tags(tag_names, current_user)
       json_string = BookmarkSerializer.new(bookmark).serialize
       render json: json_string
     else
@@ -19,7 +20,7 @@ class Api::V1::BookmarksController < Api::V1::BaseController
   def update
     bookmark = current_user.bookmarks.includes(:tags).find(params[:id])
     bookmark.assign_attributes(bookmark_params)
-    if bookmark.save_with_tags(params.dig(:bookmark, :tag_name), current_user)
+    if bookmark.save_with_tags(params.dig(:bookmark, :tag_names), current_user)
       json_string = BookmarkSerializer.new(bookmark).serialize
       render json: json_string
     else
@@ -49,6 +50,6 @@ class Api::V1::BookmarksController < Api::V1::BaseController
   private
 
   def bookmark_params
-    params.require(:bookmark).permit(:url, :title, :thumbnail, :status, :folder_id)
+    params.require(:bookmark).permit(:url, :title, :thumbnail, :note, :status, :folder_id)
   end
 end
